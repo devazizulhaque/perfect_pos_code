@@ -1,2 +1,2 @@
 # perfect_pos_code
-there use all requirment 
+there use all requirements 
