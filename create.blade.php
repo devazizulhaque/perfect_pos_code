@@ -139,14 +139,6 @@
                                               <input type="text" class="form-control" id="discount" value="0.00"
                                                   name="discount">
                                           </td>
-                                            {{-- <td>
-                                                <p class="font-weight-bold">Paid By</p>
-                                                <select class="form-contro bg-secondary pt-2 pb-2 text-center text-white" id="paidby" name="payment_type">
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Card">Card</option>
-                                                    <option value="Mobile Banking">Mobile Banking</option>
-                                                </select>
-                                            </td> --}}
                                             <td colspan="2">
                                                 <p class="font-weight-bold">Amount Paid</p>
                                                 <input type="text" class="form-control" id="pay_" name="paid_amount" required>
@@ -214,7 +206,7 @@
                 $.each(data, function(key, value){
                     result += '<div class="col-sm-6 col-md-3 mb-4">';
                     result += '<div card card-modern card-modern-alt-padding" style="height: 300px">';
-                    result += '<div class="card-body bg-light" style="height: 300px">';
+                    result += '<div class="card-body bg-light p-0" style="height: 300px">';
                     result += '<div class="image-frame mb-2">';
                     result += '<div class="image-frame-wrapper">';
                     result += '<a href="javascript:void(0);" id="product" data-id="'+value.id+'" class="product productSelect"><img src="{{ asset('') }}'+value.image+'" class="img-fluid" alt="Product Short Name" /></a>';
@@ -251,8 +243,6 @@
     })
   });
 
-
-  
   $(document).on('click', '#product', function () {
     var product_id = $(this).attr('data-id');
     var supplierId = $('#supplierId').val();
@@ -302,6 +292,7 @@
             <td><button name="remove" class="btn btn-danger btn-sm remove" id="remove"><i class="fas fa-eraser"></i> </button></td>
             </tr>`);
           cartTotal();
+          $('#discount').trigger('keyup');
           var tr = $('#items1').append(`<tr data-id="${product_id}">
             <td style="color: #000; width: 10px">${n1}</td>
             <td style="color: #000; width: 20px">${data.product_name}</td>
@@ -315,13 +306,14 @@
             return this.rowIndex === rowIndex;
           }).remove();
           cartTotal();
+          $('#discount').trigger('keyup');
         });
       }
     }
   });
 
   $(function() {
-    $(document).on('keyup', '#price, .quantity', function() { // Updated to include '.quantity'
+    $(document).on('keyup', '#price, .quantity', function() {
       let quantity = $(this).closest('tr').find('.quantity').val();
       let price = $(this).closest('tr').find('.price').val();
       let grandtotal = quantity * price;
@@ -329,7 +321,7 @@
       $(this).closest('tr').find('#grandtotal').html(getsubtotal);
 
       cartTotal();
-      $('#discount').trigger('keyup'); // Trigger keyup event on the discount input field
+      $('#discount').trigger('keyup');
     });
   });
 
@@ -390,35 +382,33 @@
     });
   });
 
-function updateDue(){
-  var value1 = $("#total_").val();
-  var value2 = parseFloat($('#pay_').val()) || 0;
-  var value3 = parseFloat($('#previous_due').val()) || 0;
-  var value4 = parseFloat(value1)
-  console.log(value3);
-  if (value2 > 0) {
-    var total = value1 - value2 + value3
-    let purchaseDue = '<input type="" value="' + total + '" class="form-control form-custom" name="due_amount" readonly>';
-    $('#purchase_due').html(purchaseDue); 
+  function updateDue(){
+    var value1 = $("#total_").val();
+    var value2 = parseFloat($('#pay_').val()) || 0;
+    var value3 = parseFloat($('#previous_due').val()) || 0;
+    var value4 = parseFloat(value1)
+    
+    if (value2 > 0) {
+      var total = value1 - value2 + value3
+      let purchaseDue = '<input type="" value="' + total + '" class="form-control form-custom" name="due_amount" readonly>';
+      $('#purchase_due').html(purchaseDue); 
+    }
+    else{
+      var total = value4 + value3
+      let purchaseDue = '<input type="" value="' + total + '" class="form-control form-custom" name="due_amount" readonly>';
+      $('#purchase_due').html(purchaseDue); 
+    }
   }
-  else{
-    var total = value4 + value3
-    let purchaseDue = '<input type="" value="' + total + '" class="form-control form-custom" name="due_amount" readonly>';
-    $('#purchase_due').html(purchaseDue); 
-  }
-}
 
 
 
 var today = new Date();
 
-// Format the date as YYYY-MM-DD
 var year = today.getFullYear();
 var month = (today.getMonth() + 1).toString().padStart(2, '0');
 var day = today.getDate().toString().padStart(2, '0');
 var formattedDate = `${year}-${month}-${day}`;
 
-// Set the value of the date input to today's date
 document.getElementById('dateInput').value = formattedDate;
 
 </script>
